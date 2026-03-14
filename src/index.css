@@ -73,10 +73,10 @@ body {
   background: rgba(255, 255, 255, 0.1);
   backdrop-filter: blur(10px);
   border-radius: 20px;
-  padding: 2rem;
+  padding: 1.5rem;
   border: 1px solid rgba(255, 255, 255, 0.2);
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
-  max-height: 600px;
+  max-height: 500px;
   overflow-y: auto;
 }
 
@@ -460,7 +460,7 @@ body {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 1rem;
+  padding: 0.6rem 1rem;
   background: rgba(255, 255, 255, 0.05);
   border-radius: 12px;
   cursor: pointer;
