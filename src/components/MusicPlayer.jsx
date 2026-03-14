@@ -14,6 +14,8 @@ export const MusicPlayer = () => {
     isPlaying,
     play,
     pause,
+    volume,
+    setVolume,
   } = useMusic();
   const audioRef = useRef(null);
   const handleTimeChange = (e) => {
@@ -24,7 +26,17 @@ export const MusicPlayer = () => {
     audio.currentTime = newTime;
     setCurrentTime(newTime);
   };
+  const handleVolumeChange = (e) => {
+    const newVolume = parseFloat(e.target.value);
+    setVolume(newVolume);
+  };
 
+  useEffect(() => {
+    const audio = audioRef.current;
+    if (!audio) return;
+
+    audio.volume = volume;
+  }, [volume]);
   useEffect(() => {
     const audio = audioRef.current;
     if (!audio) return;
@@ -61,6 +73,8 @@ export const MusicPlayer = () => {
     };
   }, [setDuration, setCurrentTime, currentTrack]);
 
+  const progressPercentage = duration > 0 ? (currentTime / duration) * 100 : 0;
+
   return (
     <div className="music-player">
       <audio
@@ -83,7 +97,7 @@ export const MusicPlayer = () => {
           value={currentTime || 0}
           className="progress-bar"
           onChange={handleTimeChange}
-          // style={{}}
+          style={{ "--progress": `${progressPercentage}%` }}
         />
         <span className="time">{formatTime(duration)}</span>
       </div>
@@ -100,6 +114,20 @@ export const MusicPlayer = () => {
         <button className="control-btn" onClick={nextTrack}>
           ⏭
         </button>
+      </div>
+      <div className="volume-container">
+        <span className="volume-icon">
+          <i class="fa-solid fa-volume-high"></i>
+        </span>
+        <input
+          type="range"
+          min="0"
+          max="1"
+          step="0.1"
+          className="volume-bar"
+          onChange={handleVolumeChange}
+          value={volume}
+        />
       </div>
     </div>
   );
