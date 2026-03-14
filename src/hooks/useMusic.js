@@ -45,6 +45,21 @@ export const useMusic = () => {
     return `${minutes}:${seconds.toString().padStart(2, "0")}`;
   };
 
+  const nextTrack = () => {
+    setCurrentTrackIndex((prev) => {
+      const nextIndex = (prev + 1) % allSongs.length;
+      setCurrentTrack(allSongs[nextIndex]);
+      return nextIndex;
+    });
+  };
+  const prevTrack = () => {
+    setCurrentTrackIndex((prev) => {
+      const nextIndex = prev === 0 ? allSongs.length - 1 : prev - 1;
+      setCurrentTrack(allSongs[nextIndex]);
+      return nextIndex;
+    });
+  };
+
   return {
     allSongs,
     handlePlaySong,
@@ -54,5 +69,8 @@ export const useMusic = () => {
     setCurrentTime,
     formatTime,
     duration,
+    setDuration,
+    nextTrack,
+    prevTrack,
   };
 };
