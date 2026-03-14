@@ -11,8 +11,30 @@ export const MusicPlayer = () => {
     setCurrentTime,
     nextTrack,
     prevTrack,
+    isPlaying,
+    play,
+    pause,
   } = useMusic();
   const audioRef = useRef(null);
+  const handleTimeChange = (e) => {
+    const audio = audioRef.current;
+    if (!audio) return;
+
+    const newTime = parseFloat(e.target.value);
+    audio.currentTime = newTime;
+    setCurrentTime(newTime);
+  };
+
+  useEffect(() => {
+    const audio = audioRef.current;
+    if (!audio) return;
+
+    if (isPlaying) {
+      audio.play().catch((err) => console.error(err));
+    } else {
+      audio.pause();
+    }
+  }, [isPlaying]);
 
   useEffect(() => {
     const audio = audioRef.current;
@@ -21,13 +43,21 @@ export const MusicPlayer = () => {
     const handleLoadedMetadata = () => {
       setDuration(audio.duration);
     };
-    const handleTimeUpdate = () => {};
-    const handleEnded = () => {};
+    const handleTimeUpdate = () => {
+      setCurrentTime(audio.currentTime);
+    };
+    const handleEnded = () => {
+      nextTrack();
+    };
 
     audio.addEventListener("loadedmetadata", handleLoadedMetadata);
+    audio.addEventListener("timeupdate", handleTimeUpdate);
+    audio.addEventListener("ended", handleEnded);
 
     return () => {
       audio.removeEventListener("loadedmetadata", handleLoadedMetadata);
+      audio.removeEventListener("timeupdate", handleTimeUpdate);
+      audio.removeEventListener("ended", handleEnded);
     };
   }, [setDuration, setCurrentTime, currentTrack]);
 
@@ -52,6 +82,7 @@ export const MusicPlayer = () => {
           step="0.1"
           value={currentTime || 0}
           className="progress-bar"
+          onChange={handleTimeChange}
           // style={{}}
         />
         <span className="time">{formatTime(duration)}</span>
@@ -60,7 +91,12 @@ export const MusicPlayer = () => {
         <button className="control-btn" onClick={prevTrack}>
           ⏮
         </button>
-        <button className="control-btn play-btn">▶</button>
+        <button
+          className="control-btn play-btn"
+          onClick={() => (isPlaying ? pause() : play())}
+        >
+          {isPlaying ? "⏸" : "▶"}
+        </button>
         <button className="control-btn" onClick={nextTrack}>
           ⏭
         </button>
