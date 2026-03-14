@@ -1,4 +1,4 @@
-import { createContext, useState } from "react";
+import { createContext, useContext, useState } from "react";
 
 const songs = [
   {
@@ -95,4 +95,12 @@ export const MusicProvider = ({ children }) => {
       {children}
     </MusicContext.Provider>
   );
+};
+
+export const useMusic = () => {
+  const contextValue = useContext(MusicContext);
+  if (!contextValue) {
+    throw new Error("useMusic must be used within MusicProvider");
+  }
+  return contextValue;
 };
