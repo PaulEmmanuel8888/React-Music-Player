@@ -34,6 +34,7 @@ export const MusicProvider = ({ children }) => {
   const [duration, setDuration] = useState(0);
   const [volume, setVolume] = useState(0.5);
   const [isPlaying, setIsPlaying] = useState(false);
+  const [playlists, setPlaylists] = useState([]);
 
   const handlePlaySong = (song, index) => {
     setCurrentTrack(song);
@@ -67,6 +68,16 @@ export const MusicProvider = ({ children }) => {
     setIsPlaying(false);
   };
 
+  const createPlaylist = (name) => {
+    const newPlaylist = {
+      id: Date.now(),
+      name,
+      songs: [],
+    };
+
+    setPlaylists((prev) => [...prev, newPlaylist]);
+  };
+
   const play = () => setIsPlaying(true);
   const pause = () => setIsPlaying(false);
 
@@ -90,6 +101,8 @@ export const MusicProvider = ({ children }) => {
         isPlaying,
         volume,
         setVolume,
+        playlists,
+        createPlaylist,
       }}
     >
       {children}
