@@ -78,6 +78,18 @@ export const MusicProvider = ({ children }) => {
     setPlaylists((prev) => [...prev, newPlaylist]);
   };
 
+  const addSongToPlaylist = (playlistId, song) => {
+    setPlaylists((prev) =>
+      prev.map((playlist) => {
+        if (playlist.id === playlistId) {
+          return { ...prev, songs: [...playlist.songs, song] };
+        } else {
+          return playlist;
+        }
+      }),
+    );
+  };
+
   const play = () => setIsPlaying(true);
   const pause = () => setIsPlaying(false);
 
@@ -103,6 +115,7 @@ export const MusicProvider = ({ children }) => {
         setVolume,
         playlists,
         createPlaylist,
+        addSongToPlaylist,
       }}
     >
       {children}

@@ -7,7 +7,13 @@ export const Playlists = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [showDropdown, setShowDropdown] = useState(false);
 
-  const { playlists, createPlaylist, allSongs } = useMusic();
+  const {
+    playlists,
+    createPlaylist,
+    allSongs,
+    addSongToPlaylist,
+    currentTrackIndex,
+  } = useMusic();
   const filteredSongs = allSongs.filter((song) => {
     const matches =
       song.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -25,8 +31,11 @@ export const Playlists = () => {
       setNewPlaylistName("");
     }
   };
-  const handleAddSong = () => {
+  const handleAddSong = (song) => {
     if (selectedPlaylist) {
+      addSongToPlaylist(selectedPlaylist.id, song);
+      setSearchQuery("");
+      setShowDropdown(false);
     }
   };
 
@@ -104,6 +113,28 @@ export const Playlists = () => {
                     </div>
                   )}
                 </div>
+              </div>
+
+              <div className="playlist-songs">
+                {playlist.songs.length === 0 ? (
+                  <p className="empty-playlist">No songs added yet...</p>
+                ) : (
+                  playlist.songs.map((song, key) => (
+                    <div
+                      key={key}
+                      className={`playlist-song ${currentTrackIndex === allSongs.findIndex((s) => s.id === song.id) ? "active" : ""}`}
+                      onClick={() =>
+                        handlePlayFromPlaylist(song, playlist.id, key)
+                      }
+                    >
+                      <div className="song-info">
+                        <span className="song-title">{song.title}</span>
+                        <span className="song-artist">{song.artist}</span>
+                      </div>
+                      <span className="song-duration">{song.duration}</span>
+                    </div>
+                  ))
+                )}
               </div>
             </div>
           ))
