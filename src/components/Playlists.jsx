@@ -14,6 +14,7 @@ export const Playlists = () => {
     addSongToPlaylist,
     currentTrackIndex,
     handlePlaySong,
+    deletePlaylist,
   } = useMusic();
   const filteredSongs = allSongs.filter((song) => {
     const matches =
@@ -45,6 +46,12 @@ export const Playlists = () => {
     handlePlaySong(song, globalIndex);
   };
 
+  const deletePlaylistConfirmation = (playlist) => {
+    if (window.confirm(`Are you sure you want to delete "${playlist.name}"?`)) {
+      deletePlaylist(playlist.id);
+    }
+  };
+
   return (
     <div className="playlists">
       <h2>Playlists</h2>
@@ -69,12 +76,17 @@ export const Playlists = () => {
         {playlists.length === 0 ? (
           <p className="empty-message">No playlists created yet.</p>
         ) : (
-          playlists.map((playlist, key) => (
-            <div className="playlist-item" key={key}>
+          playlists.map((playlist) => (
+            <div className="playlist-item" key={playlist.id}>
               <div className="playlist-header">
                 <h3>{playlist.name}</h3>
                 <div className="playlist-actions">
-                  <button className="delete-playlist-btn">Delete</button>
+                  <button
+                    className="delete-playlist-btn"
+                    onClick={() => deletePlaylistConfirmation(playlist)}
+                  >
+                    Delete
+                  </button>
                 </div>
               </div>
               <div className="add-song-section">
@@ -88,11 +100,11 @@ export const Playlists = () => {
                     onChange={(e) => {
                       setSearchQuery(e.target.value);
                       setSelectedPlaylist(playlist);
-                      setShowDropdown(e.target.value.length > 0);
+                      setShowDropdown(searchQuery.length > 0);
                     }}
                     onFocus={(e) => {
                       setSelectedPlaylist(playlist);
-                      setShowDropdown(e.target.length > 0);
+                      setShowDropdown(searchQuery.length > 0);
                     }}
                     className="song-search-input"
                   />
@@ -103,10 +115,10 @@ export const Playlists = () => {
                           No songs found.
                         </div>
                       ) : (
-                        filteredSongs.slice(0, 5).map((song, key) => (
+                        filteredSongs.slice(0, 5).map((song) => (
                           <div
                             className="dropdown-item"
-                            key={key}
+                            key={song.id}
                             onClick={() => {
                               handleAddSong(song);
                             }}
@@ -125,9 +137,9 @@ export const Playlists = () => {
                 {playlist.songs.length === 0 ? (
                   <p className="empty-playlist">No songs added yet...</p>
                 ) : (
-                  playlist.songs.map((song, key) => (
+                  playlist.songs.map((song) => (
                     <div
-                      key={key}
+                      key={song.id}
                       className={`playlist-song ${currentTrackIndex === allSongs.findIndex((s) => s.id === song.id) ? "active" : ""}`}
                       onClick={() => handlePlayFromPlaylist(song)}
                     >

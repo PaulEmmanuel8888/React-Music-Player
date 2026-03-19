@@ -78,14 +78,22 @@ export const MusicProvider = ({ children }) => {
     setPlaylists((prev) => [...prev, newPlaylist]);
   };
 
+  const deletePlaylist = (playlistId) => {
+    setPlaylists((prev) =>
+      prev.filter((playlist) => playlist.id !== playlistId),
+    );
+  };
+
   const addSongToPlaylist = (playlistId, song) => {
     setPlaylists((prev) =>
       prev.map((playlist) => {
         if (playlist.id === playlistId) {
-          return { ...prev, songs: [...playlist.songs, song] };
-        } else {
-          return playlist;
+          return {
+            ...playlist,
+            songs: [...playlist.songs, song],
+          };
         }
+        return playlist;
       }),
     );
   };
@@ -116,6 +124,7 @@ export const MusicProvider = ({ children }) => {
         playlists,
         createPlaylist,
         addSongToPlaylist,
+        deletePlaylist,
       }}
     >
       {children}
