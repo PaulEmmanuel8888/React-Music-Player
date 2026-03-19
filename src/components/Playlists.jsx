@@ -13,6 +13,7 @@ export const Playlists = () => {
     allSongs,
     addSongToPlaylist,
     currentTrackIndex,
+    handlePlaySong,
   } = useMusic();
   const filteredSongs = allSongs.filter((song) => {
     const matches =
@@ -37,6 +38,11 @@ export const Playlists = () => {
       setSearchQuery("");
       setShowDropdown(false);
     }
+  };
+
+  const handlePlayFromPlaylist = (song) => {
+    const globalIndex = allSongs.findIndex((s) => s.id === song.id);
+    handlePlaySong(song, globalIndex);
   };
 
   return (
@@ -123,9 +129,7 @@ export const Playlists = () => {
                     <div
                       key={key}
                       className={`playlist-song ${currentTrackIndex === allSongs.findIndex((s) => s.id === song.id) ? "active" : ""}`}
-                      onClick={() =>
-                        handlePlayFromPlaylist(song, playlist.id, key)
-                      }
+                      onClick={() => handlePlayFromPlaylist(song)}
                     >
                       <div className="song-info">
                         <span className="song-title">{song.title}</span>
